@@ -12,7 +12,7 @@ table.appendChild(tableSimple) // Hozzaadja a tableSimple-t a table-hez
 const th = document.createElement('th') // Letrehoz egy th elemet
 tableSimple.appendChild(th) // Hozzaadja a th-t a tableSimple-hez
 const tr = document.createElement('tr') // Letrehoz egy tr elemet
-tableSimple.appendChild(tr) // Hozzaadja a tr-t a tableSimple-hez
+th.appendChild(tr) // Hozzaadja a tr-t a tableSimple-hez
 const thCells = ['Szerző', 'Műfaj', 'Cím'] // Letrehoz egy tombot a th cellak neveivel
 for(const content of thCells) { // Vegigmegy a tombon
     const cell = document.createElement('th') // Letrehoz egy th cellat
@@ -36,7 +36,7 @@ const elements = [{ // Letrehoz egy tombot az input elemek neveivel
 {
     id: 'cim',  // Az id az input elem neve, ami a formban lesz
     label: 'Cím',    // Az input elem neve, ami a tableben lesz
-}] // Letrehoz egy tombot az input elemek neveivel
+}]
 
 for(const element of elements) {
     const field = div('field') // Letrehoz egy field div-et
