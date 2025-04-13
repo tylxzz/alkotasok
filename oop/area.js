@@ -36,7 +36,7 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
         super(cssClass) // Meghivja az Area osztaly konstruktorat a cssClass-al
         const table = document.createElement('table') // Letrehoz egy table elemet
         this.div.appendChild(table) // Hozzaadja a table-t a div-hez
-        const th = document.createElement('th') // Letrehoz egy th elemet
+        const th = document.createElement('thead') // Letrehoz egy th elemet
         table.appendChild(th) // Hozzaadja a th-t a table-hez
         const tr = document.createElement('tr') // Letrehoz egy tr elemet
         th.appendChild(tr) // Hozzaadja a tr-t a table-hez

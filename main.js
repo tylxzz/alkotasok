@@ -1,3 +1,4 @@
+const array = [] // Letrehoz egy ures tombot
 const div = (className) => {    // Ez egy arrow function, ami egy div elemet hoz létre a megadott className-nel
     const div = document.createElement('div')  // Létrehoz egy div elemet
     div.className = className  // Beállítja a className-t
@@ -9,7 +10,7 @@ document.body.appendChild(container)   // hozzaadja a body-hoz
 const table = div('table') // Letrehoz egy table div-et
 const tableSimple = document.createElement('table') // Letrehoz egy table elemet
 table.appendChild(tableSimple) // Hozzaadja a tableSimple-t a table-hez
-const th = document.createElement('th') // Letrehoz egy th elemet
+const th = document.createElement('thead') // Letrehoz egy th elemet
 tableSimple.appendChild(th) // Hozzaadja a th-t a tableSimple-hez
 const tr = document.createElement('tr') // Letrehoz egy tr elemet
 th.appendChild(tr) // Hozzaadja a tr-t a tableSimple-hez
@@ -54,6 +55,29 @@ for(const element of elements) {
 const button = document.createElement('button') // Letrehoz egy button elemet
 button.textContent = 'Hozzáadás' // Beallitja a button tartalmat
 formSimple.appendChild(button) // Hozzaadja a button-t a formSimple-hez
+formSimple.addEventListener('submit', (e) => { // Hozzaad egy eseményfigyelőt a formSimple-hez, ami akkor fut le, amikor az űrlapot elküldik
+    e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
+    const object = {} // Letrehoz egy ures objektumot
+    const inputFields = e.target.querySelectorAll('input') // Letrehoz egy tombot az input elemekkel
+    for(const field of inputFields) { // Vegigmegy a tombon
+        object[field.id] = field.value // Beallitja az objektumot az input elem id-javal es value-javal
+    }
+    array.push(object) // Hozzaadja az objektumot a tombhoz
+    const tr = document.createElement('tr') // Letrehoz egy tr elemet
+    tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
+
+    const szerzo = document.createElement('td') // Letrehoz egy td elemet
+    szerzo.textContent = object.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
+    tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
+
+    const mu = document.createElement('td') // Letrehoz egy td elemet
+    mu.textContent = object.mu // Beallitja a td tartalmat az objektum mu property-jere
+    tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
+
+    const cim = document.createElement('td') // Letrehoz egy td elemet
+    cim.textContent = object.cim // Beallitja a td tartalmat az objektum cim property-jere
+    tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+})
 
 container.appendChild(table)    // Hozzaadja a table div-et a container-hez
 container.appendChild(form)   // Hozzaadja a form div-et a container-hez
