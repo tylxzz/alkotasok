@@ -15,15 +15,24 @@ class Area{ // Letrehoz egy Area osztalyt
      * @param {className} className 
      */
     constructor(className) {    // Ez a konstruktor létrehoz egy új Area objektumot a megadott className-nel
+        const container = this.#getContainerDiv() // Meghivja a getContainerDiv() fuggvenyt, ami visszaadja a container-t
+        this.#div = document.createElement('div') // Letrehoz egy div elemet
+        this.#div.className = className // Beallitja a className-t
+        container.appendChild(this.#div) // Hozzaadja a div-et a container-hez
+    }
+
+    /**
+     * 
+     * @returns {HTMLDivElement}
+     */
+    #getContainerDiv() {
         let container = document.querySelector('.containeroop') // Keres egy elemet a DOM-ban a className alapján
         if(!container) { // Ha nem találja, akkor létrehoz egy új div elemet
             container = document.createElement('div') // Létrehoz egy div elemet
             container.className = 'containeroop' // Beállítja a className-t
             document.body.appendChild(container) // Hozzáadja a body-hoz
         }
-        this.#div = document.createElement('div') // Létrehoz egy új div elemet
-        this.#div.className = className // Beállítja a className-t
-        container.appendChild(this.#div) // Hozzáadja a container-hez
+        return container // Visszaadja a container-t
     }
 }
 
@@ -34,6 +43,13 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
      */
     constructor(cssClass) { // Ez a konstruktor létrehoz egy új Table objektumot a megadott cssClass-al
         super(cssClass) // Meghivja az Area osztaly konstruktorat a cssClass-al
+        const tbody = this.#createTable() // Meghivja a createTable() fuggvenyt, ami visszaadja a tbody-t
+    }
+
+    /**
+     * @returns {HTMLTableSectionElement}
+     */
+    #createTable() {
         const table = document.createElement('table') // Letrehoz egy table elemet
         this.div.appendChild(table) // Hozzaadja a table-t a div-hez
         const th = document.createElement('thead') // Letrehoz egy th elemet
@@ -48,30 +64,19 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
         }
         const tbody = document.createElement('tbody') // Letrehoz egy tbody elemet
         table.appendChild(tbody) // Hozzaadja a tbody-t a table-hez
+        return tbody // Visszaadja a tbody-t
     }
 }
 
 class Form extends Area {
     /**
      * @param {cssClass} cssClass 
+     * @param {HTMLElement} elements
      */
-    constructor(cssClass) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al
+    constructor(cssClass, elements) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el
         super(cssClass) // Meghivja az Area osztaly konstruktorat a cssClass-al
         const form = document.createElement('form') // Letrehoz egy form elemet
         this.div.appendChild(form) // Hozzaadja a form-ot a div-hez
-        const elements = [{ // Letrehoz egy tombot az input elemek neveivel
-            id: 'szerzo',   // Az id az input elem neve, ami a formban lesz
-            label: 'Szerző', // Az input elem neve, ami a tableben lesz
-        },
-        {
-            id: 'mu',   // Az id az input elem neve, ami a formban lesz
-            label: 'Műfaj',  // Az input elem neve, ami a tableben lesz
-        },
-        {
-            id: 'cim',  // Az id az input elem neve, ami a formban lesz
-            label: 'Cím',    // Az input elem neve, ami a tableben lesz
-        }]
-        
         for(const element of elements) {  // Vegigmegy a tombon
             const field = div('field') // Letrehoz egy field div-et
             form.appendChild(field) // Hozzaadja a field div-et a formhoz

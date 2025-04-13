@@ -1,4 +1,18 @@
 const separator = document.createElement('hr') // hogy a html-en egyszeruen megtalalhato legyen az elvalaszto oop es sima kozott
 document.body.appendChild(separator)    // Hozzaadja a separator-t a body-hoz
+
+const fConfig = [{ // Letrehoz egy tombot az input elemek neveivel
+    id: 'szerzo',   // Az id az input elem neve, ami a formban lesz
+    label: 'Szerző', // Az input elem neve, ami a tableben lesz
+},
+{
+    id: 'mu',   // Az id az input elem neve, ami a formban lesz
+    label: 'Műfaj',  // Az input elem neve, ami a tableben lesz
+},
+{
+    id: 'cim',  // Az id az input elem neve, ami a formban lesz
+    label: 'Cím',    // Az input elem neve, ami a tableben lesz
+}]
+
 const tableDiv = new Table('table') // Letrehoz egy table div-et
-const formDiv = new Form('form')   // Letrehoz egy form div-et
+const formDiv = new Form('form', fConfig)   // Letrehoz egy form div-et
