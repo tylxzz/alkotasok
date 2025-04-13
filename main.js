@@ -19,6 +19,8 @@ for(const content of thCells) { // Vegigmegy a tombon
     cell.innerHTML = content // Beallitja a cell tartalmat
     tr.appendChild(cell) // Hozzaadja a cellat a th-hez
 }
+const tbody = document.createElement('tbody') // Letrehoz egy tbody elemet
+tableSimple.appendChild(tbody) // Hozzaadja a tbody-t a tableSimple-hez
 
 const form = div('form')  // Letrehoz egy form div-et
 
