@@ -50,6 +50,9 @@ for(const element of elements) {
     input.id = element.id // Beallitja az input elem id-jat
     field.appendChild(document.createElement('br')) // Hozzaad egy sort a field div-hez
     field.appendChild(input) // Hozzaadja az input elemet a field div-hez
+    const error = document.createElement('span') // Letrehoz egy span elemet
+    error.className = 'error' // Beallitja a span className-jat
+    field.appendChild(error) // Hozzaadja a span-t a field div-hez
 }
 
 const button = document.createElement('button') // Letrehoz egy button elemet
@@ -59,24 +62,38 @@ formSimple.addEventListener('submit', (e) => { // Hozzaad egy eseményfigyelőt 
     e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
     const object = {} // Letrehoz egy ures objektumot
     const inputFields = e.target.querySelectorAll('input') // Letrehoz egy tombot az input elemekkel
+    let valid = true // Beallitja a valid valtozot true-ra
     for(const field of inputFields) { // Vegigmegy a tombon
+        const error = field.parentElement.querySelector('.error') // Letrehoz egy error valtozot, ami a field szulo elemeben keresi a .error class-t
+        if(!error) {    // Ha nincs error, akkor letrehoz egyet
+            console.error('Nincs errorfield')   // Kiirja a konzolra, hogy nincs error field
+            return // Visszater
+        }
+        error.textContent = '' // Beallitja az error szoveget uresre
+        if(field.value === '') {  // Ha a field value-ja ures, akkor
+            error.textContent = 'Kötelező mező' // Beallitja az error szoveget
+            valid = false // Beallitja a valid valtozot false-ra
+        }
         object[field.id] = field.value // Beallitja az objektumot az input elem id-javal es value-javal
     }
-    array.push(object) // Hozzaadja az objektumot a tombhoz
-    const tr = document.createElement('tr') // Letrehoz egy tr elemet
-    tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
 
-    const szerzo = document.createElement('td') // Letrehoz egy td elemet
-    szerzo.textContent = object.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
-    tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
+    if(valid) {
+        array.push(object) // Hozzaadja az objektumot a tombhoz
+        const tr = document.createElement('tr') // Letrehoz egy tr elemet
+        tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
 
-    const mu = document.createElement('td') // Letrehoz egy td elemet
-    mu.textContent = object.mu // Beallitja a td tartalmat az objektum mu property-jere
-    tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
+        const szerzo = document.createElement('td') // Letrehoz egy td elemet
+        szerzo.textContent = object.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
+        tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
 
-    const cim = document.createElement('td') // Letrehoz egy td elemet
-    cim.textContent = object.cim // Beallitja a td tartalmat az objektum cim property-jere
-    tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+        const mu = document.createElement('td') // Letrehoz egy td elemet
+        mu.textContent = object.mu // Beallitja a td tartalmat az objektum mu property-jere
+        tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
+
+        const cim = document.createElement('td') // Letrehoz egy td elemet
+        cim.textContent = object.cim // Beallitja a td tartalmat az objektum cim property-jere
+        tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+    }
 })
 
 container.appendChild(table)    // Hozzaadja a table div-et a container-hez

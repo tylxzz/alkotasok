@@ -1,10 +1,17 @@
+/**
+ * @typedef {{szerzo: string, mufaj: string, cim: string}} Work
+ * 
+ * @callback AddWorkCallback
+ * @param {Work[]} work
+ * @returns {void}
+ */
 class Manager{  // Manager osztaly letrehozasa
     /**
-     * @type {Array} array
+     * @type {Work[]} array
      */
     #array
     /**
-     * @type {callback} addWorkCallback
+     * @type {AddWorkCallback} addWorkCallback
      */
     #addWorkCallback
 
@@ -13,17 +20,17 @@ class Manager{  // Manager osztaly letrehozasa
     }
 
     /**
-     * @param {callback} callback 
+     * @param {AddWorkCallback} callback 
      */
-    setAddWorkCallback(callback){
+    setAddWorkCallback(callback){   // Beallitja a callback-et
         this.#addWorkCallback = callback // Beallitja a callback-et
     }
 
     /**
-     * @param {callback} work 
+     * @param {AddWorkCallback} work 
      */
     addWork(work){ // Hozzaad egy munkat a tombhoz
         this.#array.push(work) // Hozzaadja a munkat a tombhoz
-        if(this.#addWorkCallback) this.#addWorkCallback(work) // Ha van callback, akkor meghivja a callback-et a munkaval
+        this.#addWorkCallback(work) // Meghivja a callback-et
     }
 }
