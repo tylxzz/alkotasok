@@ -5,6 +5,11 @@ class Area{ // Letrehoz egy Area osztalyt
     #div
 
     /**
+     * @type {Manager} manager
+     */
+    #manager
+
+    /**
      * @returns {HTMLDivElement}
      */
     get div() { // Ez a getter visszaadja a #div változót
@@ -12,9 +17,18 @@ class Area{ // Letrehoz egy Area osztalyt
     }
 
     /**
-     * @param {className} className 
+     * @returns {Manager}
      */
-    constructor(className) {    // Ez a konstruktor létrehoz egy új Area objektumot a megadott className-nel
+    get manager() { // Ez a getter visszaadja a #manager változót
+        return this.#manager // Visszaadja a #manager változót
+    }
+
+    /**
+     * @param {className} className 
+     * @param {Manager} manager
+     */
+    constructor(className, manager) { // Ez a konstruktor létrehoz egy új Area objektumot a megadott className-el es manager-el
+        this.#manager = manager // Beallitja a #manager-t
         const container = this.#getContainerDiv() // Meghivja a getContainerDiv() fuggvenyt, ami visszaadja a container-t
         this.#div = document.createElement('div') // Letrehoz egy div elemet
         this.#div.className = className // Beallitja a className-t
@@ -22,7 +36,6 @@ class Area{ // Letrehoz egy Area osztalyt
     }
 
     /**
-     * 
      * @returns {HTMLDivElement}
      */
     #getContainerDiv() {
@@ -38,12 +51,28 @@ class Area{ // Letrehoz egy Area osztalyt
 
 class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalybol szarmazik
     /**
-     * 
      * @param {cssClass} cssClass 
+     * @param {Manager} manager
      */
-    constructor(cssClass) { // Ez a konstruktor létrehoz egy új Table objektumot a megadott cssClass-al
-        super(cssClass) // Meghivja az Area osztaly konstruktorat a cssClass-al
+    constructor(cssClass, manager) { // Ez a konstruktor létrehoz egy új Table objektumot a megadott cssClass-al es manager-el
+        super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
         const tbody = this.#createTable() // Meghivja a createTable() fuggvenyt, ami visszaadja a tbody-t
+        this.manager.setAddWorkCallback((work) => { // Beallitja a setAddWorkCallback() fuggvenyt, ami meghivja a callback-et, amikor egy uj munkat hoznak letre
+            const tr = document.createElement('tr') // Letrehoz egy tr elemet
+
+            const szerzo = document.createElement('td') // Letrehoz egy td elemet
+            szerzo.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
+            tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
+
+            const mufaj = document.createElement('td') // Letrehoz egy td elemet
+            mufaj.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
+            tr.appendChild(mufaj) // Hozzaadja a td-t a tr-hez
+
+            const cim = document.createElement('td') // Letrehoz egy td elemet
+            cim.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
+            tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+            tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
+        })
     }
 
     /**
@@ -72,9 +101,10 @@ class Form extends Area {
     /**
      * @param {cssClass} cssClass 
      * @param {HTMLElement} elements
+     * @param {Manager} manager
      */
-    constructor(cssClass, elements) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el
-        super(cssClass) // Meghivja az Area osztaly konstruktorat a cssClass-al
+    constructor(cssClass, elements, manager) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el es manager-el
+        super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
         const form = document.createElement('form') // Letrehoz egy form elemet
         this.div.appendChild(form) // Hozzaadja a form-ot a div-hez
         for(const element of elements) {  // Vegigmegy a tombon
@@ -93,5 +123,15 @@ class Form extends Area {
         const button = document.createElement('button') // Letrehoz egy button elemet
         button.textContent = 'Hozzáadás' // Beallitja a button tartalmat
         form.appendChild(button) // Hozzaadja a button-t a formhoz
+        form.addEventListener('submit', (e) => {    // Hozzaad egy eseményfigyelőt a form-hoz, ami akkor fut le, amikor az űrlapot elküldik
+            e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
+            const object = {} // Letrehoz egy ures objektumot
+            const inputFields = e.target.querySelectorAll('input') // Letrehoz egy tombot az input elemekkel
+            for(const field of inputFields) { // Vegigmegy a tombon
+                object[field.id] = field.value // Beallitja az objektumot az input elem id-javal es value-javal
+            }
+            const work = new Work(object.szerzo, object.mufaj, object.cim) // Letrehoz egy uj Work objektumot az objektumbol
+            this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
+        })
     }
 }
