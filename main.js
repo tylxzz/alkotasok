@@ -23,6 +23,37 @@ const tbody = document.createElement('tbody') // Letrehoz egy tbody elemet
 tableSimple.appendChild(tbody) // Hozzaadja a tbody-t a tableSimple-hez
 
 const form = div('form')  // Letrehoz egy form div-et
+const formSimple = document.createElement('form') // Letrehoz egy form elemet
+form.appendChild(formSimple) // Hozzaadja a formSimple-t a form-hoz
+const elements = [{ // Letrehoz egy tombot az input elemek neveivel
+    id: 'szerzo',   // Az id az input elem neve, ami a formban lesz
+    label: 'Szerző', // Az input elem neve, ami a tableben lesz
+},
+{
+    id: 'mu',   // Az id az input elem neve, ami a formban lesz
+    label: 'Műfaj',  // Az input elem neve, ami a tableben lesz
+},
+{
+    id: 'cim',  // Az id az input elem neve, ami a formban lesz
+    label: 'Cím',    // Az input elem neve, ami a tableben lesz
+}] // Letrehoz egy tombot az input elemek neveivel
+
+for(const element of elements) {
+    const field = div('field') // Letrehoz egy field div-et
+    formSimple.appendChild(field) // Hozzaadja a field div-et a formSimple-hez
+    const label = document.createElement('label') // Letrehoz egy label elemet
+    label.htmlFor = element.id // Beallitja a label htmlFor-at az input elem id-jara 
+    label.textContent = element.label // Beallitja a label tartalmat az input elem nevére
+    field.appendChild(label) // Hozzaadja a label-t a field div-hez
+    const input = document.createElement('input') // Letrehoz egy input elemet
+    input.id = element.id // Beallitja az input elem id-jat
+    field.appendChild(document.createElement('br')) // Hozzaad egy sort a field div-hez
+    field.appendChild(input) // Hozzaadja az input elemet a field div-hez
+}
+
+const button = document.createElement('button') // Letrehoz egy button elemet
+button.textContent = 'Hozzáadás' // Beallitja a button tartalmat
+formSimple.appendChild(button) // Hozzaadja a button-t a formSimple-hez
 
 container.appendChild(table)    // Hozzaadja a table div-et a container-hez
 container.appendChild(form)   // Hozzaadja a form div-et a container-hez
