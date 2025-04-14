@@ -99,25 +99,24 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
 
 class Form extends Area {
     /**
+     * @type {FormField[]} formFieldArray
+     */
+    #formFieldArray
+
+    /**
      * @param {cssClass} cssClass 
      * @param {HTMLElement} elements
      * @param {Manager} manager
      */
     constructor(cssClass, elements, manager) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el es manager-el
         super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
+        this.#formFieldArray = [] // Letrehoz egy ures tombot a formField-eknek
         const form = document.createElement('form') // Letrehoz egy form elemet
         this.div.appendChild(form) // Hozzaadja a form-ot a div-hez
         for(const element of elements) {  // Vegigmegy a tombon
-            const field = div('field') // Letrehoz egy field div-et
-            form.appendChild(field) // Hozzaadja a field div-et a formhoz
-            const label = document.createElement('label') // Letrehoz egy label elemet
-            label.htmlFor = element.id // Beallitja a label htmlFor-at az input elem id-jara 
-            label.textContent = element.label // Beallitja a label tartalmat az input elem nevére
-            field.appendChild(label) // Hozzaadja a label-t a field div-hez
-            const input = document.createElement('input') // Letrehoz egy input elemet
-            input.id = element.id // Beallitja az input elem id-jat
-            field.appendChild(document.createElement('br')) // Hozzaad egy sort a field div-hez
-            field.appendChild(input) // Hozzaadja az input elemet a field div-hez
+            const formField = new FormField(element.id, element.label) // Letrehoz egy uj FormField objektumot a megadott id-val es label-el
+            this.#formFieldArray.push(formField) // Hozzaadja a FormField objektumot a tombhoz
+            form.appendChild(formField.getDiv()) // Hozzaadja a FormField objektumot a form-hoz
         }
         
         const button = document.createElement('button') // Letrehoz egy button elemet
@@ -133,5 +132,75 @@ class Form extends Area {
             const work = new Work(object.szerzo, object.mufaj, object.cim) // Letrehoz egy uj Work objektumot az objektumbol
             this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
         })
+    }
+}
+
+class FormField {
+    /**
+     * @type {string} id
+     */
+    #id
+    /**
+     * @type {HTMLInputElement} input
+     */
+    #input
+    /**
+     * @type {HTMLLabelElement} label
+     */
+    #label
+    /**
+     * @type {HTMLSpanElement} error
+     */
+    #error
+
+    /**
+     * @returns {string}
+     */
+    get id() {
+        return this.#id // Visszaadja az id-t
+    }
+
+    /**
+     * @returns {HTMLInputElement}
+     */
+    get value() {
+        return this.#input.value // Visszaadja az input value-jat
+    }
+
+    /**
+     * @returns {HTMLInputElement}
+     */
+    get error() {
+        return this.#error.textContent = this.value // Visszaadja az error-t az input value-javal
+    }
+
+    /**
+     * 
+     * @param {string} id 
+     * @param {string} content 
+     */
+    constructor(id, content) { // Ez a konstruktor létrehoz egy új FormField objektumot a megadott id-val es content-el
+        this.#id = id // Beallitja az id-t
+        this.#input = document.createElement('input') // Letrehoz egy input elemet
+        this.#input.id = id // Beallitja az input id-jat
+        this.#label = document.createElement('label') // Letrehoz egy label elemet
+        this.#label.htmlFor = id // Beallitja a label htmlFor-at az input elem id-jara 
+        this.#label.textContent = content // Beallitja a label tartalmat az input elem nevére
+        this.#error = document.createElement('span') // Letrehoz egy span elemet
+        this.#error.className = 'error' // Beallitja a span className-jat
+    }
+
+    /**
+     * @returns {HTMLDivElement}
+     */
+    getDiv(){
+        const div1 = div('field') // Letrehoz egy field div-et
+        const br1 = document.createElement('br') // Letrehoz egy sort
+        const br2 = document.createElement('br') // Letrehoz egy sort
+        const HTMLElements = [this.#label, br1, this.#input, br2, this.#error] // Letrehoz egy tombot az elemekkel
+        for(const element of HTMLElements) { // Vegigmegy a tombon
+            div1.appendChild(element) // Hozzaadja az elemet a div-hez
+        }
+        return div1 // Visszaadja a létrehozott div elemet
     }
 }

@@ -1,4 +1,8 @@
 const array = [] // Letrehoz egy ures tombot
+/**
+ * @param {string} className
+ * @returns {HTMLDivElement}
+ */
 const div = (className) => {    // Ez egy arrow function, ami egy div elemet hoz létre a megadott className-nel
     const div = document.createElement('div')  // Létrehoz egy div elemet
     div.className = className  // Beállítja a className-t
