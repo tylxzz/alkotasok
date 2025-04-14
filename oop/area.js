@@ -125,12 +125,19 @@ class Form extends Area {
         form.addEventListener('submit', (e) => {    // Hozzaad egy eseményfigyelőt a form-hoz, ami akkor fut le, amikor az űrlapot elküldik
             e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
             const object = {} // Letrehoz egy ures objektumot
-            const inputFields = e.target.querySelectorAll('input') // Letrehoz egy tombot az input elemekkel
-            for(const field of inputFields) { // Vegigmegy a tombon
-                object[field.id] = field.value // Beallitja az objektumot az input elem id-javal es value-javal
+            let valid = true // Beallitja a valid valtozot true-ra
+            for(const formField of this.#formFieldArray) { // Vegigmegy a tombon
+                formField.error = ''  // Beallitja az error-t uresre
+                if(formField.value === '') { // Ha az input value ures
+                    formField.error = 'Kötelező mező' // Beallitja az error-t
+                    valid = false // Beallitja a valid valtozot false-ra
+                }
+                object[formField.id] = formField.value // Beallitja az objektumot az input elem id-javal es value-javal
             }
-            const work = new Work(object.szerzo, object.mufaj, object.cim) // Letrehoz egy uj Work objektumot az objektumbol
-            this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
+            if(valid){
+                const work = new Work(object.szerzo, object.mufaj, object.cim) // Letrehoz egy uj Work objektumot az objektumbol
+                this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
+            }
         })
     }
 }
@@ -170,8 +177,8 @@ class FormField {
     /**
      * @returns {HTMLInputElement}
      */
-    get error() {
-        return this.#error.textContent = this.value // Visszaadja az error-t az input value-javal
+    set error(value) {
+        return this.#error.textContent = value // Visszaadja az error-t az input value-javal
     }
 
     /**

@@ -50,10 +50,11 @@ for(const element of elements) {
     label.htmlFor = element.id // Beallitja a label htmlFor-at az input elem id-jara 
     label.textContent = element.label // Beallitja a label tartalmat az input elem nevére
     field.appendChild(label) // Hozzaadja a label-t a field div-hez
+    field.appendChild(document.createElement('br')) // Hozzaad egy sort a field div-hez
     const input = document.createElement('input') // Letrehoz egy input elemet
     input.id = element.id // Beallitja az input elem id-jat
-    field.appendChild(document.createElement('br')) // Hozzaad egy sort a field div-hez
     field.appendChild(input) // Hozzaadja az input elemet a field div-hez
+    field.appendChild(document.createElement('br')) // Hozzaad egy sort a field div-hez
     const error = document.createElement('span') // Letrehoz egy span elemet
     error.className = 'error' // Beallitja a span className-jat
     field.appendChild(error) // Hozzaadja a span-t a field div-hez
