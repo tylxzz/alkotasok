@@ -142,6 +142,32 @@ class Form extends Area {
     }
 }
 
+class Upload extends Area {
+    constructor(cssClass, manager) {    // Ez a konstruktor létrehoz egy új Upload objektumot a megadott cssClass-al es manager-el
+        super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
+        const input = document.createElement('input') // Letrehoz egy input elemet
+        input.id = 'fileinput' // Beallitja az input id-jat
+        input.type = 'file' // Beallitja az input type-jat
+        this.div.appendChild(input) // Hozzaadja az input elemet a div1-hez
+        input.addEventListener('change', (e) => { // Hozzaad egy eseményfigyelőt az input-hoz, ami akkor fut le, amikor a felhasználó fájlt választ
+            const file = e.target.files[0] // Beallitja a file-t az input file-javal
+            const reader = new FileReader() // Letrehoz egy FileReader objektumot
+            reader.onload = () => {
+                const lines = reader.result.split('\n') // Beallitja a lines-t a reader.result-javal, ami egy tombot tartalmaz
+                const remove = lines.slice(1) // Beallitja a remove-t a lines elso elemevel
+                for(const line of remove){
+                    const trimmed = line.trim() // Beallitja a trimmed-t a line trimelt value-javal
+                    const fields = trimmed.split(';') // Beallitja a fields-t a trimmed split-javal
+                    const work = new Work(fields[0], fields[2], fields[1]) // Letrehoz egy uj Work objektumot a fields tombbol
+                    this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
+                }
+            }
+            reader.readAsText(file) // Beallitja a reader-t a file-javal
+        })
+    }
+
+}
+
 class FormField {
     /**
      * @type {string} id
