@@ -143,7 +143,7 @@ class Form extends Area {
     }
 }
 
-class Upload extends Area {
+class UploadDownload extends Area {
     /**
      * 
      * @param {cssClass} cssClass 
@@ -169,6 +169,19 @@ class Upload extends Area {
                 }
             }
             reader.readAsText(file) // Beallitja a reader-t a file-javal
+        })
+
+        const download = document.createElement('button') // Letrehoz egy button elemet
+        download.textContent = 'Letöltés' // Beallitja a button tartalmat
+        this.div.appendChild(download) // Hozzaadja a button-t a div-hez
+        download.addEventListener('click', () => {  // Hozzaad egy eseményfigyelőt a button-hoz, ami akkor fut le, amikor a felhasználó rákattint
+            const link = document.createElement('a') // Letrehoz egy a elemet
+            const content = this.manager.generateExportString() // Beallitja a content-t a manager generateExportString-javal
+            const file = new Blob([content]) // Letrehoz egy file-t a content-bol
+            link.href = URL.createObjectURL(file) // Beallitja a link href-jat a file-javal
+            link.download = 'newdata.csv' // Beallitja a letoltes nevet
+            link.click() // Meghivja a linket
+            URL.revokeObjectURL(link.href) // Megszunteti a linket
         })
     }
 
