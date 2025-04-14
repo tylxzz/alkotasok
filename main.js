@@ -103,3 +103,41 @@ formSimple.addEventListener('submit', (e) => { // Hozzaad egy eseményfigyelőt 
 
 container.appendChild(table)    // Hozzaadja a table div-et a container-hez
 container.appendChild(form)   // Hozzaadja a form div-et a container-hez
+
+const fileInput = document.createElement('input') // Letrehoz egy file input elemet
+container.appendChild(fileInput) // Hozzaadja a file input elemet a container-hez
+fileInput.id = 'fileinput' // Beallitja a file input elem id-jat
+fileInput.type = 'file' // Beallitja a file input elem type-jat
+fileInput.addEventListener('change', (e) => {  // Hozzaad egy eseményfigyelőt a file input elemhez, ami akkor fut le, amikor a felhasználó kiválaszt egy fájlt
+    const file = e.target.files[0] // Letrehoz egy file valtozot, ami a file input elem elso file-jat tartalmazza
+    const reader = new FileReader() // Letrehoz egy FileReader objektumot
+    reader.onload = () => { // Eseményfigyelő, ami akkor fut le, amikor a fájl betöltődött
+        const lines = reader.result.split('\n') // Letrehoz egy tombot, ami a file sorait tartalmazza
+        const remove = lines.slice(1)
+        for(const line of remove) {
+            const trimmed = line.trim() // Letrehoz egy trimmed valtozot, ami a sor trimelt value-jat tartalmazza
+            const fields = trimmed.split(';') // Letrehoz egy tombot, ami a sor elemeit tartalmazza
+            const work = {
+                szerzo: fields[0], // Beallitja az objektum szerzo property-jat
+                cim: fields[1], // Beallitja az objektum cim property-jat
+                mufaj: fields[2], // Beallitja az objektum mufaj property-jat
+            }
+            array.push(work) // Hozzaadja az objektumot a tombhoz
+            const tr = document.createElement('tr') // Letrehoz egy tr elemet
+            tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
+
+            const szerzo = document.createElement('td') // Letrehoz egy td elemet
+            szerzo.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
+            tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
+
+            const mu = document.createElement('td') // Letrehoz egy td elemet
+            mu.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
+            tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
+
+            const cim = document.createElement('td') // Letrehoz egy td elemet
+            cim.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
+            tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+        }
+    }
+    reader.readAsText(file) // Beolvassa a file-t szovegkent
+})
