@@ -64,13 +64,14 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
             szerzo.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
             tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
 
-            const mufaj = document.createElement('td') // Letrehoz egy td elemet
-            mufaj.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
-            tr.appendChild(mufaj) // Hozzaadja a td-t a tr-hez
-
+            
             const cim = document.createElement('td') // Letrehoz egy td elemet
             cim.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
             tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+
+            const mufaj = document.createElement('td') // Letrehoz egy td elemet
+            mufaj.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
+            tr.appendChild(mufaj) // Hozzaadja a td-t a tr-hez
             tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
         })
     }
@@ -85,7 +86,7 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
         table.appendChild(th) // Hozzaadja a th-t a table-hez
         const tr = document.createElement('tr') // Letrehoz egy tr elemet
         th.appendChild(tr) // Hozzaadja a tr-t a table-hez
-        const thCells = ['Szerző', 'Műfaj', 'Cím'] // Letrehoz egy tombot a th cellak neveivel
+        const thCells = ['Szerző', 'Cím', 'Műfaj'] // Letrehoz egy tombot a th cellak neveivel
         for(const content of thCells) { // Vegigmegy a tombon
             const thcell =  document.createElement('th') // Letrehoz egy th cellat
             thcell.innerHTML = content // Beallitja a cell tartalmat
@@ -143,6 +144,11 @@ class Form extends Area {
 }
 
 class Upload extends Area {
+    /**
+     * 
+     * @param {cssClass} cssClass 
+     * @param {Manager} manager 
+     */
     constructor(cssClass, manager) {    // Ez a konstruktor létrehoz egy új Upload objektumot a megadott cssClass-al es manager-el
         super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
         const input = document.createElement('input') // Letrehoz egy input elemet

@@ -18,7 +18,7 @@ const th = document.createElement('thead') // Letrehoz egy th elemet
 tableSimple.appendChild(th) // Hozzaadja a th-t a tableSimple-hez
 const tr = document.createElement('tr') // Letrehoz egy tr elemet
 th.appendChild(tr) // Hozzaadja a tr-t a tableSimple-hez
-const thCells = ['Szerző', 'Műfaj', 'Cím'] // Letrehoz egy tombot a th cellak neveivel
+const thCells = ['Szerző', 'Cím', 'Műfaj'] // Letrehoz egy tombot a th cellak neveivel
 for(const content of thCells) { // Vegigmegy a tombon
     const cell = document.createElement('th') // Letrehoz egy th cellat
     cell.innerHTML = content // Beallitja a cell tartalmat
@@ -35,12 +35,12 @@ const elements = [{ // Letrehoz egy tombot az input elemek neveivel
     label: 'Szerző', // Az input elem neve, ami a tableben lesz
 },
 {
-    id: 'mu',   // Az id az input elem neve, ami a formban lesz
-    label: 'Műfaj',  // Az input elem neve, ami a tableben lesz
-},
-{
     id: 'cim',  // Az id az input elem neve, ami a formban lesz
     label: 'Cím',    // Az input elem neve, ami a tableben lesz
+},
+{
+    id: 'mu',   // Az id az input elem neve, ami a formban lesz
+    label: 'Műfaj',  // Az input elem neve, ami a tableben lesz
 }]
 
 for(const element of elements) {
@@ -90,14 +90,14 @@ formSimple.addEventListener('submit', (e) => { // Hozzaad egy eseményfigyelőt 
         const szerzo = document.createElement('td') // Letrehoz egy td elemet
         szerzo.textContent = object.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
         tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
+        
+        const cim = document.createElement('td') // Letrehoz egy td elemet
+        cim.textContent = object.cim // Beallitja a td tartalmat az objektum cim property-jere
+        tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
 
         const mu = document.createElement('td') // Letrehoz egy td elemet
         mu.textContent = object.mu // Beallitja a td tartalmat az objektum mu property-jere
         tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
-
-        const cim = document.createElement('td') // Letrehoz egy td elemet
-        cim.textContent = object.cim // Beallitja a td tartalmat az objektum cim property-jere
-        tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
     }
 })
 
@@ -130,14 +130,31 @@ fileInput.addEventListener('change', (e) => {  // Hozzaad egy eseményfigyelőt 
             szerzo.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
             tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
 
-            const mu = document.createElement('td') // Letrehoz egy td elemet
-            mu.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
-            tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
-
             const cim = document.createElement('td') // Letrehoz egy td elemet
-            cim.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
+            cim.textContent = work.cim // Beallitja a td tartalmat az objektum mu property-jere
             tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+
+            const mu = document.createElement('td') // Letrehoz egy td elemet
+            mu.textContent = work.mufaj // Beallitja a td tartalmat az objektum cim property-jere
+            tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
         }
     }
     reader.readAsText(file) // Beolvassa a file-t szovegkent
+})
+
+const download = document.createElement('button') // Letrehoz egy button elemet
+download.textContent = 'Letöltés' // Beallitja a button tartalmat
+container.appendChild(download) // Hozzaadja a button-t a container-hez
+download.addEventListener('click', () => {
+    const link = document.createElement('a') // Letrehoz egy a elemet
+    const contentArray = ['szerzo;cim;mufaj'] // Letrehoz egy tombot a file tartalmaval
+    for(const work of array) { // Vegigmegy a tombon
+        contentArray.push(`${work.szerzo};${work.mufaj};${work.cim}`) // Hozzaadja a tombhoz az objektumot
+    }
+    const content = contentArray.join('\n') // Letrehoz egy content valtozot, ami a tomb elemeit tartalmazza
+    const file = new Blob([content]) // Letrehoz egy file valtozot, ami a content tombot tartalmazza
+    link.href = URL.createObjectURL(file) // Beallitja a link href-jat a file-ra
+    link.download = 'newdata.csv' // Beallitja a link download property-jat
+    link.click() // Kattint a linkre, hogy letolthesse a file-t
+    URL.revokeObjectURL(link.href) // Megsemmisiti a file-t
 })

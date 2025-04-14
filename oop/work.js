@@ -4,13 +4,13 @@ class Work{
      */
     #szerzo
     /**
-     * @type {string} mufaj
-     */
-    #mufaj
-    /**
      * @type {string} cim
      */
     #cim
+    /**
+     * @type {string} mufaj
+     */
+    #mufaj
 
     /**
      * @returns {string}
@@ -22,26 +22,26 @@ class Work{
     /**
      * @returns {string}
      */
+    get cim(){  // Ez a getter visszaadja a #cim property-t
+        return this.#cim    // Visszaadja a #cim property-t
+    }
+    
+    /**
+     * @returns {string}
+     */
     get mufaj(){    // Ez a getter visszaadja a #mufaj property-t
         return this.#mufaj  // Visszaadja a #mufaj property-t
     }
 
     /**
-     * @returns {string}
-     */
-    get cim(){  // Ez a getter visszaadja a #cim property-t
-        return this.#cim    // Visszaadja a #cim property-t
-    }
-
-    /**
      * 
      * @param {string} szerzo 
-     * @param {string} mufaj 
      * @param {string} cim 
+     * @param {string} mufaj 
      */
     constructor(szerzo, mufaj, cim){    // Ez a konstruktor létrehoz egy új Work objektumot a megadott szerzo, mufaj es cim property-kkel
         this.#szerzo = szerzo   // Beallitja a #szerzo property-t
-        this.#mufaj = mufaj // Beallitja a #mufaj property-t
         this.#cim = cim // Beallitja a #cim property-t
+        this.#mufaj = mufaj // Beallitja a #mufaj property-t
     }
 }
