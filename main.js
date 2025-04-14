@@ -9,6 +9,22 @@ const div = (className) => {    // Ez egy arrow function, ami egy div elemet hoz
     return div // Visszaadja a létrehozott div elemet
 }
 
+/**
+ * 
+ * @param {Work[]} workArray 
+ * @param {callback} callback 
+ * @returns {Work[]}
+ */
+const filter = (workArray, callback) => {   // Ez egy arrow function, ami egy új tömböt hoz létre a megadott workArray-ból a callback függvény alapján
+    const result = [] // Letrehoz egy ures tombot
+    for(const work of workArray) { // Vegigmegy a tombon
+        if(callback(work)) { // Ha a callback true-t ad vissza, akkor
+            result.push(work) // Hozzaadja az elemet a tombhoz
+        }
+    }
+    return result // Visszaadja a tombot
+}
+
 const container = div('container') // Letrehoz egy container div-et
 document.body.appendChild(container)   // hozzaadja a body-hoz
 const table = div('table') // Letrehoz egy table div-et
@@ -99,6 +115,9 @@ formSimple.addEventListener('submit', (e) => { // Hozzaad egy eseményfigyelőt 
         mu.textContent = object.mu // Beallitja a td tartalmat az objektum mu property-jere
         tr.appendChild(mu) // Hozzaadja a td-t a tr-hez
     }
+    for(const i of inputFields) { // Vegigmegy a tombon
+        i.value = '' // Beallitja az input elem value-jat uresre
+    }
 })
 
 container.appendChild(table)    // Hozzaadja a table div-et a container-hez
@@ -157,4 +176,84 @@ download.addEventListener('click', () => {
     link.download = 'newdata.csv' // Beallitja a link download property-jat
     link.click() // Kattint a linkre, hogy letolthesse a file-t
     URL.revokeObjectURL(link.href) // Megsemmisiti a file-t
+})
+
+const filterForm = div('filter') // Letrehoz egy filter div-et
+container.appendChild(filterForm) // Hozzaadja a filter div-et a container-hez
+
+const formForFilter = document.createElement('form') // Letrehoz egy form elemet
+filterForm.appendChild(formForFilter) // Hozzaadja a form elemet a filter div-hez
+const select = document.createElement('select') // Letrehoz egy select elemet
+formForFilter.appendChild(select) // Hozzaadja a select elemet a form-hoz
+const options = [{
+    value: '',
+    innerText: '',
+},
+{
+    value: 'szerzo',
+    innerText: 'Szerző',  
+},
+{
+    value: 'cim',
+    innerText: 'Cím',
+},
+{
+    value: 'mufaj',
+    innerText: 'Műfaj',
+}]
+for(const option of options) { // Vegigmegy a tombon
+    const element = document.createElement('option') // Letrehoz egy option elemet
+    element.value = option.value // Beallitja az option value-jat
+    element.innerText = option.innerText // Beallitja az option innerText property-jat
+    select.appendChild(element) // Hozzaadja az option elemet a select-hez
+}
+
+const input = document.createElement('input') // Letrehoz egy input elemet
+input.id = 'filterInput' // Beallitja az input id-jat
+formForFilter.appendChild(input) // Hozzaadja az input elemet a form-hoz
+
+const filterButton = document.createElement('button') // Letrehoz egy button elemet
+filterButton.innerText = 'Szűrés' // Beallitja a button tartalmat
+formForFilter.appendChild(filterButton) // Hozzaadja a button-t a form-hoz
+formForFilter.addEventListener('submit', (e) => {   // Hozzaad egy eseményfigyelőt a formForFilter-hez, ami akkor fut le, amikor az űrlapot elküldik
+    e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
+    const filterInput = document.querySelector('#filterInput') // Letrehoz egy filterInput valtozot, ami a filter input elemet tartalmazza
+    const select = e.target.querySelector('select') // Letrehoz egy select valtozot, ami a select elemet tartalmazza
+
+    const filteredArray = filter(array, (element) => {
+        if(select.value === 'szerzo') { // Ha a select value-ja szerzo, akkor
+            if(filterInput.value === element.szerzo) { // Ha az element szerzo property-je megegyezik a filter input value-javal, akkor
+                return true // Visszaadja a true-t
+            }
+        }else if(select.value === 'cim') { // Ha a select value-ja cim, akkor
+            if(filterInput.value === element.cim) { // Ha az element cim property-je megegyezik a filter input value-javal, akkor
+                return true // Visszaadja a true-t
+            }
+        }else if(select.value === 'mufaj') { // Ha a select value-ja mufaj, akkor
+            if(filterInput.value === element.mufaj) { // Ha az element mufaj property-je megegyezik a filter input value-javal, akkor
+                return true // Visszaadja a true-t
+            }
+        }else{
+            return true // Visszaadja a true-t
+        }
+    })
+
+    tbody.innerHTML = '' // Beallitja a tbody innerHTML property-jat uresre
+    for(const filteredElement of filteredArray){
+        const tr = document.createElement('tr') // Letrehoz egy tr elemet
+        tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
+
+        const szerzoCell = document.createElement('td') // Letrehoz egy td elemet
+        szerzoCell.textContent = filteredElement.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
+        tr.appendChild(szerzoCell) // Hozzaadja a td-t a tr-hez
+
+        const cimCell = document.createElement('td') // Letrehoz egy td elemet
+        cimCell.textContent = filteredElement.cim // Beallitja a td tartalmat az objektum cim property-jere
+        tr.appendChild(cimCell) // Hozzaadja a td-t a tr-hez
+
+        const mufajCell = document.createElement('td') // Letrehoz egy td elemet
+        mufajCell.textContent = filteredElement.mufaj // Beallitja a td tartalmat az objektum mufaj property-jere
+        tr.appendChild(mufajCell) // Hozzaadja a td-t a tr-hez
+    }
+    filterInput.value = '' // Beallitja a filter input value-jat uresre
 })
