@@ -57,29 +57,44 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
     constructor(cssClass, manager) { // Ez a konstruktor létrehoz egy új Table objektumot a megadott cssClass-al es manager-el
         super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
         const tbody = this.#createTable() // Meghivja a createTable() fuggvenyt, ami visszaadja a tbody-t
-        this.manager.setAddWorkCallback((work) => { // Beallitja a setAddWorkCallback() fuggvenyt, ami meghivja a callback-et, amikor egy uj munkat hoznak letre
-            const tr = document.createElement('tr') // Letrehoz egy tr elemet
+        this.manager.setAddWorkCallback((work) => { // Beallitja a callback-et
+            this.#createWorkRow(work, tbody) // Meghivja a createPersonRow() fuggvenyt, ami letrehozza a sort
+        })
+        this.manager.setRenderTableCallback((workArray) => { // Beallitja a callback-et
+            tbody.innerHTML = '' // Beallitja a tbody-t uresre
+            for(const work of workArray) { // Vegigmegy a tombon
+                this.#createWorkRow(work, tbody) // Meghivja a createPersonRow() fuggvenyt, ami letrehozza a sort
+            }
+        })
+    }
 
-            const szerzo = document.createElement('td') // Letrehoz egy td elemet
-            szerzo.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
-            tr.appendChild(szerzo) // Hozzaadja a td-t a tr-hez
+    /**
+     * 
+     * @param {Work} work 
+     * @param {TableSectionElement} tbody 
+     */
+    #createWorkRow(work, tbody) { // Ez a fuggveny letrehoz egy uj sort a tablaban
+        const tr = document.createElement('tr') // Letrehoz egy tr elemet
+
+        const szerzoCell = document.createElement('td') // Letrehoz egy td elemet
+        szerzoCell.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
+        tr.appendChild(szerzoCell) // Hozzaadja a td-t a tr-hez
 
             
-            const cim = document.createElement('td') // Letrehoz egy td elemet
-            cim.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
-            tr.appendChild(cim) // Hozzaadja a td-t a tr-hez
+        const cimCell = document.createElement('td') // Letrehoz egy td elemet
+        cimCell.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
+        tr.appendChild(cimCell) // Hozzaadja a td-t a tr-hez
 
-            const mufaj = document.createElement('td') // Letrehoz egy td elemet
-            mufaj.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
-            tr.appendChild(mufaj) // Hozzaadja a td-t a tr-hez
-            tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
-        })
+        const mufajCell = document.createElement('td') // Letrehoz egy td elemet
+        mufajCell.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
+        tr.appendChild(mufajCell) // Hozzaadja a td-t a tr-hez
+        tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
     }
 
     /**
      * @returns {HTMLTableSectionElement}
      */
-    #createTable() {
+    #createTable() { // Ez a fuggveny letrehoz egy uj tablazatot
         const table = document.createElement('table') // Letrehoz egy table elemet
         this.div.appendChild(table) // Hozzaadja a table-t a div-hez
         const th = document.createElement('thead') // Letrehoz egy th elemet

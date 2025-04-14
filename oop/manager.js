@@ -14,6 +14,10 @@ class Manager{  // Manager osztaly letrehozasa
      * @type {AddWorkCallback} addWorkCallback
      */
     #addWorkCallback
+    /**
+     * @type {RenderTableCallback} renderTableCallback
+     */
+    #renderTableCallback
 
     constructor(){
         this.#array = [] // Letrehoz egy ures tombot
@@ -27,11 +31,33 @@ class Manager{  // Manager osztaly letrehozasa
     }
 
     /**
+     * 
+     * @param {RenderTableCallback} callback 
+     */
+    setRenderTableCallback(callback){ // Beallitja a renderTableCallback-et
+        this.#renderTableCallback = callback // Beallitja a renderTableCallback-et
+    }
+
+    /**
      * @param {AddWorkCallback} work 
      */
     addWork(work){ // Hozzaad egy munkat a tombhoz
         this.#array.push(work) // Hozzaadja a munkat a tombhoz
         this.#addWorkCallback(work) // Meghivja a callback-et
+    }
+
+    /**
+     * 
+     * @param {RenderTableCallback} callback 
+     */
+    filter(callback){
+        const result = [] // Letrehoz egy ures tombot
+        for(const work of this.#array){ // Vegigmegy a tomb elemein
+            if(callback(work)){ // Ha a callback true-t ad vissza, akkor
+                result.push(work) // Hozzaadja az elemet a tombhoz
+            }
+        }
+        this.#renderTableCallback(result) // Meghivja a renderTableCallback-et
     }
 
     /**
