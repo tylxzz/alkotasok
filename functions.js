@@ -1,6 +1,14 @@
 /**
+ * @typedef {{szerzo: string, mufaj: string, cim: string}} Work2
+ * 
+ * @callback WorkCallback2
+ * @param {Work2[]} work
+ * @returns {void}
+ */
+
+/**
  * @param {string} className
- * @returns {HTMLDivElement}
+ * @returns {HTMLDivElement} div
  */
 const div = (className) => {    // Ez egy arrow function, ami egy div elemet hoz létre a megadott className-nel
     const div = document.createElement('div')  // Létrehoz egy div elemet
@@ -10,9 +18,9 @@ const div = (className) => {    // Ez egy arrow function, ami egy div elemet hoz
 
 /**
  * 
- * @param {Work[]} workArray 
- * @param {callback} callback 
- * @returns {Work[]}
+ * @param {Work2[]} workArray 
+ * @param {WorkCallback2} callback 
+ * @returns {Work2[]} result
  */
 const filter = (workArray, callback) => {   // Ez egy arrow function, ami egy új tömböt hoz létre a megadott workArray-ból a callback függvény alapján
     const result = [] // Letrehoz egy ures tombot
@@ -27,7 +35,7 @@ const filter = (workArray, callback) => {   // Ez egy arrow function, ami egy ú
 /**
  * 
  * @param {HTMLDivElement} container 
- * @param {callback} callback 
+ * @param {WorkCallback2} callback 
  */
 const createTable = (container, callback) =>  { // Ez egy arrow function, ami egy uj table elemet hoz letre a megadott containerben
     const table = div('table') // Letrehoz egy table div-et
@@ -52,7 +60,7 @@ const createTable = (container, callback) =>  { // Ez egy arrow function, ami eg
 /**
  * @param {HTMLTableSectionElement} tbody 
  * @param {HTMLDivElement} container 
- * @param {Work[]} workArray 
+ * @param {Work2[]} workArray 
  */
 const createFileUpload = (tbody, container, workArray) => { // Ez egy arrow function, ami egy file input elemet hoz létre a megadott tablebody-val es container-rel
     const fileInput = document.createElement('input') // Letrehoz egy file input elemet
@@ -84,9 +92,9 @@ const createFileUpload = (tbody, container, workArray) => { // Ez egy arrow func
 /**
  * @param {HTMLTableSectionElement} tbody 
  * @param {HTMLDivElement} container 
- * @param {Work[]} workArray 
+ * @param {Work2[]} workArray 
  */
-const createForm = (tbody, container, workArray) => {
+const createForm = (tbody, container, workArray) => {   // Ez egy arrow function, ami egy form elemet hoz létre a megadott tablebody-val es container-rel
     const form = div('form')  // Letrehoz egy form div-et
     container.appendChild(form) // Hozzaadja a form div-et a container-hez
     const formSimple = document.createElement('form') // Letrehoz egy form elemet
@@ -104,7 +112,7 @@ const createForm = (tbody, container, workArray) => {
         label: 'Műfaj',  // Az input elem neve, ami a tableben lesz
     }]
 
-    for(const element of elements) {
+    for(const element of elements) {    // Vegigmegy a tombon
         const field = div('field') // Letrehoz egy field div-et
         formSimple.appendChild(field) // Hozzaadja a field div-et a formSimple-hez
         const label = document.createElement('label') // Letrehoz egy label elemet
@@ -143,11 +151,11 @@ const createForm = (tbody, container, workArray) => {
             object[field.id] = field.value // Beallitja az objektumot az input elem id-javal es value-javal
         }
 
-        if(valid) {
+        if(valid) { // Ha a valid valtozo true, akkor
             workArray.push(object) // Hozzaadja az objektumot a tombhoz
             addRow(object, tbody) // Meghivja az addRow fuggvenyt a tablebody-val es az objektummal
         }
-        for(const i of inputFields) {
+        for(const i of inputFields) {   // Vegigmegy a tombon
             i.value = '' // Beallitja az input elemek value-jat uresre
         }
 
@@ -155,10 +163,10 @@ const createForm = (tbody, container, workArray) => {
 }
 
 /**
- * @param {Object} object 
+ * @param {Work2} object 
  * @param {HTMLDivElement} tbody 
  */
-const addRow = (object, tbody) => {
+const addRow = (object, tbody) => { // Ez egy arrow function, ami egy uj sort hoz letre a megadott tablebody-val es objektummal
     const tr = document.createElement('tr') // Letrehoz egy tr elemet
     tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
 
@@ -177,13 +185,13 @@ const addRow = (object, tbody) => {
 
 /**
  * @param {HTMLDivElement} container 
- * @param {Work[]} workArray 
+ * @param {Work2[]} workArray 
  */
 const createFileDownload = (container, workArray) => {  // Ez egy arrow function, ami egy file letolto gombot hoz letre a megadott containerben
     const download = document.createElement('button') // Letrehoz egy button elemet
     download.textContent = 'Letöltés' // Beallitja a button tartalmat
     container.appendChild(download) // Hozzaadja a button-t a container-hez
-    download.addEventListener('click', () => {
+    download.addEventListener('click', () => {  // Hozzaad egy eseményfigyelőt a button-hoz, ami akkor fut le, amikor a felhasználó rákattint
         const link = document.createElement('a') // Letrehoz egy a elemet
         const contentArray = ['szerzo;cim;mufaj'] // Letrehoz egy tombot a file tartalmaval
         for(const work of workArray) { // Vegigmegy a tombon
@@ -201,7 +209,7 @@ const createFileDownload = (container, workArray) => {  // Ez egy arrow function
 /**
  * @param {HTMLDivElement} container 
  * @param {HTMLTableSectionElement} tbody 
-* @param {Work[]} workArray 
+* @param {Work2[]} workArray 
  */
 const createFilterForm = (container, tbody, workArray) => { // Ez egy arrow function, ami egy filter formot hoz letre a megadott containerben
     const filterForm = div('filter') // Letrehoz egy filter div-et
@@ -211,21 +219,21 @@ const createFilterForm = (container, tbody, workArray) => { // Ez egy arrow func
     filterForm.appendChild(formForFilter) // Hozzaadja a form elemet a filter div-hez
     const select = document.createElement('select') // Letrehoz egy select elemet
     formForFilter.appendChild(select) // Hozzaadja a select elemet a form-hoz
-    const options = [{
-        value: '',
-        innerText: '',
+    const options = [{  // Letrehoz egy tombot az option elemekkel
+        value: '',  // Az option value-ja
+        innerText: '',  // Az option innerText property-je
     },
     {
-        value: 'szerzo',
-        innerText: 'Szerző',  
+        value: 'szerzo',    // Az option value-ja
+        innerText: 'Szerző',    // Az option innerText property-je
     },
     {
-        value: 'cim',
-        innerText: 'Cím',
+        value: 'cim',   // Az option value-ja
+        innerText: 'Cím',   // Az option innerText property-je
     },
     {
-        value: 'mufaj',
-        innerText: 'Műfaj',
+        value: 'mufaj', // Az option value-ja
+        innerText: 'Műfaj', // Az option innerText property-je
     }]
     for(const option of options) { // Vegigmegy a tombon
         const element = document.createElement('option') // Letrehoz egy option elemet
@@ -246,7 +254,7 @@ const createFilterForm = (container, tbody, workArray) => { // Ez egy arrow func
         const filterInput = document.querySelector('#filterInput') // Letrehoz egy filterInput valtozot, ami a filter input elemet tartalmazza
         const select = e.target.querySelector('select') // Letrehoz egy select valtozot, ami a select elemet tartalmazza
 
-        const filteredArray = filter(workArray, (element) => {
+        const filteredArray = filter(workArray, (element) => {  // Meghivja a filter fuggvenyt, ami szurja az elemeket
             if(select.value === 'szerzo') { // Ha a select value-ja szerzo, akkor
                 if(filterInput.value === element.szerzo) { // Ha az element szerzo property-je megegyezik a filter input value-javal, akkor
                     return true // Visszaadja a true-t
@@ -259,13 +267,13 @@ const createFilterForm = (container, tbody, workArray) => { // Ez egy arrow func
                 if(filterInput.value === element.mufaj) { // Ha az element mufaj property-je megegyezik a filter input value-javal, akkor
                     return true // Visszaadja a true-t
                 }
-            }else{
+            }else{  // Ha a select value-ja ures, akkor
                 return true // Visszaadja a true-t
             }
         })
 
         tbody.innerHTML = '' // Beallitja a tbody innerHTML property-jat uresre
-        for(const filteredElement of filteredArray){
+        for(const filteredElement of filteredArray){    // Vegigmegy a tombon
             addRow(filteredElement, tbody) // Meghivja az addRow fuggvenyt a tablebody-val es az objektummal
         }
         filterInput.value = '' // Beallitja a filter input value-jat uresre

@@ -1,7 +1,5 @@
-/**
- * @typedef {{szerzo: string, mufaj: string, cim: string}} Work
- * 
- * @callback AddWorkCallback
+/** 
+ * @callback WorkCallback
  * @param {Work[]} work
  * @returns {void}
  */
@@ -9,22 +7,22 @@ class Manager{  // Manager osztaly letrehozasa
     /**
      * @type {Work[]} array
      */
-    #array
+    #array  // Letrehoz egy ures tombot, ami a Work objektumokat tartalmazza
     /**
-     * @type {AddWorkCallback} addWorkCallback
+     * @type {WorkCallback} addWorkCallback
      */
-    #addWorkCallback
+    #addWorkCallback    // Letrehoz egy ures tombot, ami a Work objektumokat tartalmazza
     /**
      * @type {RenderTableCallback} renderTableCallback
      */
-    #renderTableCallback
+    #renderTableCallback    // Letrehoz egy ures tombot, ami a Work objektumokat tartalmazza
 
-    constructor(){
+    constructor(){  // Konstruktor letrehozasa
         this.#array = [] // Letrehoz egy ures tombot
     }
 
     /**
-     * @param {AddWorkCallback} callback 
+     * @param {WorkCallback} callback 
      */
     setAddWorkCallback(callback){   // Beallitja a callback-et
         this.#addWorkCallback = callback // Beallitja a callback-et
@@ -32,14 +30,14 @@ class Manager{  // Manager osztaly letrehozasa
 
     /**
      * 
-     * @param {RenderTableCallback} callback 
+     * @param {WorkCallback} callback 
      */
     setRenderTableCallback(callback){ // Beallitja a renderTableCallback-et
         this.#renderTableCallback = callback // Beallitja a renderTableCallback-et
     }
 
     /**
-     * @param {AddWorkCallback} work 
+     * @param {Work} work 
      */
     addWork(work){ // Hozzaad egy munkat a tombhoz
         this.#array.push(work) // Hozzaadja a munkat a tombhoz
@@ -48,9 +46,9 @@ class Manager{  // Manager osztaly letrehozasa
 
     /**
      * 
-     * @param {RenderTableCallback} callback 
+     * @param {WorkCallback} callback 
      */
-    filter(callback){
+    filter(callback){   // Szur egy tombot a callback alapjan
         const result = [] // Letrehoz egy ures tombot
         for(const work of this.#array){ // Vegigmegy a tomb elemein
             if(callback(work)){ // Ha a callback true-t ad vissza, akkor
@@ -61,9 +59,9 @@ class Manager{  // Manager osztaly letrehozasa
     }
 
     /**
-     * @returns {Work[]} work
+     * @returns {string} work
      */
-    generateExportString(){
+    generateExportString(){ // Letrehoz egy export stringet
         const result = ['szerzo;cim;mufaj'] // Letrehoz egy tombot, ami a header-t tartalmazza
         for(const work of this.#array){ // Vegigmegy a tomb elemein
             result.push(`${work.szerzo};${work.cim};${work.mufaj}`) // Hozzaadja az elemet a tombhoz

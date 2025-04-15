@@ -2,22 +2,22 @@ class Area{ // Letrehoz egy Area osztalyt
     /**
      * @type {HTMLDivElement} div
      */
-    #div
+    #div    // Ez a property a div elemet tarolja, ami a tablazatot tartalmazza
 
     /**
      * @type {Manager} manager
      */
-    #manager
+    #manager    // Ez a property a manager objektumot tarolja, ami a tablazatot kezeli
 
     /**
-     * @returns {HTMLDivElement}
+     * @returns {HTMLDivElement} div
      */
     get div() { // Ez a getter visszaadja a #div változót
         return this.#div // Visszaadja a #div változót
     }
 
     /**
-     * @returns {Manager}
+     * @returns {Manager} manager
      */
     get manager() { // Ez a getter visszaadja a #manager változót
         return this.#manager // Visszaadja a #manager változót
@@ -36,9 +36,9 @@ class Area{ // Letrehoz egy Area osztalyt
     }
 
     /**
-     * @returns {HTMLDivElement}
+     * @returns {HTMLDivElement} container
      */
-    #getContainerDiv() {
+    #getContainerDiv() {    // Ez a fuggveny letrehoz egy uj container div-et
         let container = document.querySelector('.containeroop') // Keres egy elemet a DOM-ban a className alapján
         if(!container) { // Ha nem találja, akkor létrehoz egy új div elemet
             container = document.createElement('div') // Létrehoz egy div elemet
@@ -46,6 +46,17 @@ class Area{ // Letrehoz egy Area osztalyt
             document.body.appendChild(container) // Hozzáadja a body-hoz
         }
         return container // Visszaadja a container-t
+    }
+
+    /**
+     * 
+     * @param {HTMLLabelElement} label 
+     * @returns {HTMLButtonElement} button
+     */
+    createButton(label) {   // Ez a fuggveny letrehoz egy uj button-t
+        const button = document.createElement('button') // Letrehoz egy button elemet
+        button.textContent = label // Beallitja a button tartalmat
+        return button // Visszaadja a button-t
     }
 }
 
@@ -57,15 +68,31 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
     constructor(cssClass, manager) { // Ez a konstruktor létrehoz egy új Table objektumot a megadott cssClass-al es manager-el
         super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
         const tbody = this.#createTable() // Meghivja a createTable() fuggvenyt, ami visszaadja a tbody-t
-        this.manager.setAddWorkCallback((work) => { // Beallitja a callback-et
-            this.#createWorkRow(work, tbody) // Meghivja a createPersonRow() fuggvenyt, ami letrehozza a sort
-        })
-        this.manager.setRenderTableCallback((workArray) => { // Beallitja a callback-et
+        this.manager.setAddWorkCallback(this.#addWorkCallback(tbody)) // Beallitja a callback-et, ami meghivja a createWorkRow() fuggvenyt
+        this.manager.setRenderTableCallback(this.#renderTableCallack(tbody)) // Beallitja a renderTableCallback-et, ami meghivja a createWorkRow() fuggvenyt
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} tbody
+     * @returns {(array: Work[]) => void} 
+     */
+    #renderTableCallack(tbody) { // Ez a fuggveny letrehozza a tablazatot
+        return (array) => { // Visszaad egy fuggvenyt, ami megkapja a tombot
             tbody.innerHTML = '' // Beallitja a tbody-t uresre
-            for(const work of workArray) { // Vegigmegy a tombon
+            for(const work of array) { // Vegigmegy a tombon
                 this.#createWorkRow(work, tbody) // Meghivja a createPersonRow() fuggvenyt, ami letrehozza a sort
             }
-        })
+        }
+    }
+
+    /**
+     * @param {HTMLTableSectionElement} tbody
+     * @returns {(work: Work) => void}
+     */
+    #addWorkCallback(tbody) { // Ez a fuggveny letrehozza a callback-et
+        return (work) => { // Visszaad egy fuggvenyt, ami megkapja a work-et
+            this.#createWorkRow(work, tbody) // Meghivja a createPersonRow() fuggvenyt, ami letrehozza a sort
+        }
     }
 
     /**
@@ -75,24 +102,26 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
      */
     #createWorkRow(work, tbody) { // Ez a fuggveny letrehoz egy uj sort a tablaban
         const tr = document.createElement('tr') // Letrehoz egy tr elemet
-
-        const szerzoCell = document.createElement('td') // Letrehoz egy td elemet
-        szerzoCell.textContent = work.szerzo // Beallitja a td tartalmat az objektum szerzo property-jere
-        tr.appendChild(szerzoCell) // Hozzaadja a td-t a tr-hez
-
-            
-        const cimCell = document.createElement('td') // Letrehoz egy td elemet
-        cimCell.textContent = work.cim // Beallitja a td tartalmat az objektum cim property-jere
-        tr.appendChild(cimCell) // Hozzaadja a td-t a tr-hez
-
-        const mufajCell = document.createElement('td') // Letrehoz egy td elemet
-        mufajCell.textContent = work.mufaj // Beallitja a td tartalmat az objektum mu property-jere
-        tr.appendChild(mufajCell) // Hozzaadja a td-t a tr-hez
-        tbody.appendChild(tr) // Hozzaadja a tr-t a tbody-hoz
+        this.#createCell(tr, work.szerzo) // Meghivja a createCell() fuggvenyt, ami letrehozza a cellat
+        this.#createCell(tr, work.cim) // Meghivja a createCell() fuggvenyt, ami letrehozza a cellat
+        this.#createCell(tr, work.mufaj) // Meghivja a createCell() fuggvenyt, ami letrehozza a cellat
+        tbody.appendChild(tr) // Hozzaadja a sort a tbody-hoz
     }
 
     /**
-     * @returns {HTMLTableSectionElement}
+     * 
+     * @param {HTMLTableRowElement} row 
+     * @param {string} textContent 
+     * @param {string} type 
+     */
+    #createCell(row, textContent, type='td') { // Ez a fuggveny letrehoz egy uj cellat a tablaban
+        const cell = document.createElement(type) // Letrehoz egy cellat
+        cell.textContent = textContent // Beallitja a cell tartalmat
+        row.appendChild(cell) // Hozzaadja a cellat a row-hoz
+    }
+
+    /**
+     * @returns {HTMLTableSectionElement} tbody
      */
     #createTable() { // Ez a fuggveny letrehoz egy uj tablazatot
         const table = document.createElement('table') // Letrehoz egy table elemet
@@ -103,9 +132,7 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
         th.appendChild(tr) // Hozzaadja a tr-t a table-hez
         const thCells = ['Szerző', 'Cím', 'Műfaj'] // Letrehoz egy tombot a th cellak neveivel
         for(const content of thCells) { // Vegigmegy a tombon
-            const thcell =  document.createElement('th') // Letrehoz egy th cellat
-            thcell.innerHTML = content // Beallitja a cell tartalmat
-            tr.appendChild(thcell) // Hozzaadja a cellat a th-hez
+            this.#createCell(tr, content, 'th') // Meghivja a createCell() fuggvenyt, ami letrehozza a cellat
         }
         const tbody = document.createElement('tbody') // Letrehoz egy tbody elemet
         table.appendChild(tbody) // Hozzaadja a tbody-t a table-hez
@@ -113,11 +140,11 @@ class Table extends Area {  // Letrehoz egy Table osztalyt, ami az Area osztalyb
     }
 }
 
-class Form extends Area {
+class Form extends Area {   // Letrehoz egy Form osztalyt, ami az Area osztalybol szarmazik
     /**
      * @type {FormField[]} formFieldArray
      */
-    #formFieldArray
+    #formFieldArray // Ez a property a formField-eket tarolja, amik a formban vannak
 
     /**
      * @param {cssClass} cssClass 
@@ -127,38 +154,78 @@ class Form extends Area {
     constructor(cssClass, elements, manager) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el es manager-el
         super(cssClass, manager) // Meghivja az Area osztaly konstruktorat a cssClass-al es a manager-el
         this.#formFieldArray = [] // Letrehoz egy ures tombot a formField-eknek
+        const form = this.#createForm(elements) // Meghivja a createForm() fuggvenyt, ami visszaadja a formot
+        form.addEventListener('submit', this.#formsubmit()) // Hozzaad egy eseményfigyelőt a form-hoz, ami akkor fut le, amikor az űrlapot elküldik
+    }
+
+    /**
+     * 
+     * @param {HTMLElement} fieldElements 
+     * @returns {HTMLFormElement} form
+     */
+    #createForm(fieldElements) { // Ez a fuggveny letrehoz egy uj formot
         const form = document.createElement('form') // Letrehoz egy form elemet
         this.div.appendChild(form) // Hozzaadja a form-ot a div-hez
-        for(const element of elements) {  // Vegigmegy a tombon
+        for(const element of fieldElements) { // Vegigmegy a tombon
             const formField = new FormField(element.id, element.label) // Letrehoz egy uj FormField objektumot a megadott id-val es label-el
             this.#formFieldArray.push(formField) // Hozzaadja a FormField objektumot a tombhoz
             form.appendChild(formField.getDiv()) // Hozzaadja a FormField objektumot a form-hoz
         }
-        
-        const button = document.createElement('button') // Letrehoz egy button elemet
-        button.textContent = 'Hozzáadás' // Beallitja a button tartalmat
+
+        const button = this.createButton('Hozzáadás') // Letrehoz egy button elemet
         form.appendChild(button) // Hozzaadja a button-t a formhoz
-        form.addEventListener('submit', (e) => {    // Hozzaad egy eseményfigyelőt a form-hoz, ami akkor fut le, amikor az űrlapot elküldik
+
+        return form // Visszaadja a formot
+    }
+
+    /**
+     * 
+     * @returns {(e: Event) => void}
+     */
+    #formsubmit() { // Ez a fuggveny letrehoz egy uj formot
+        return(e) => {  // Hozzaad egy eseményfigyelőt a form-hoz, ami akkor fut le, amikor az űrlapot elküldik
             e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
-            const object = {} // Letrehoz egy ures objektumot
-            let valid = true // Beallitja a valid valtozot true-ra
-            for(const formField of this.#formFieldArray) { // Vegigmegy a tombon
-                formField.error = ''  // Beallitja az error-t uresre
-                if(formField.value === '') { // Ha az input value ures
-                    formField.error = 'Kötelező mező' // Beallitja az error-t
-                    valid = false // Beallitja a valid valtozot false-ra
-                }
-                object[formField.id] = formField.value // Beallitja az objektumot az input elem id-javal es value-javal
-            }
-            if(valid){
-                const work = new Work(object.szerzo, object.mufaj, object.cim) // Letrehoz egy uj Work objektumot az objektumbol
+            if(this.#validate()){
+                const object = this.#getObject() // Meghivja a getObject() fuggvenyt, ami visszaadja az objektumot
+                const work = new Work(object.szerzo, object.cim, object.mufaj) // Letrehoz egy uj Work objektumot az objektumbol
                 this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
+
+                for (const formField of this.#formFieldArray) { // Vegigmegy a tombon
+                    formField.value = ''; // Beállítja az input mező értékét üresre
+                }
             }
-        })
+        }
+    }
+
+    /**
+     * @returns {boolean} valid
+     */
+    #validate() {   // Ez a fuggveny letrehoz egy uj validatort
+        let valid = true // Beallitja a valid valtozot true-ra
+        for(const formField of this.#formFieldArray) { // Vegigmegy a tombon
+            formField.error = ''  // Beallitja az error-t uresre
+            if(formField.value === '') { // Ha az input value ures
+                formField.error = 'Kötelező mező' // Beallitja az error-t
+                valid = false // Beallitja a valid valtozot false-ra
+            }
+        }
+        return valid // Visszaadja a valid valtozot
+    }
+
+    /**
+     * 
+     * @returns {work} object
+     */
+    #getObject(){   // Ez a fuggveny letrehoz egy uj objektumot
+        const object = {} // Letrehoz egy ures objektumot
+        for(const formField of this.#formFieldArray) { // Vegigmegy a tombon
+            object[formField.id] = formField.value // Beallitja az objektumot az input elem id-javal es value-javal
+        }
+        return object // Visszaadja az objektumot
     }
 }
 
-class UploadDownload extends Area {
+class UploadDownload extends Area { // Letrehoz egy UploadDownload osztalyt, ami az Area osztalybol szarmazik
     /**
      * 
      * @param {cssClass} cssClass 
@@ -170,26 +237,18 @@ class UploadDownload extends Area {
         input.id = 'fileinput' // Beallitja az input id-jat
         input.type = 'file' // Beallitja az input type-jat
         this.div.appendChild(input) // Hozzaadja az input elemet a div1-hez
-        input.addEventListener('change', (e) => { // Hozzaad egy eseményfigyelőt az input-hoz, ami akkor fut le, amikor a felhasználó fájlt választ
-            const file = e.target.files[0] // Beallitja a file-t az input file-javal
-            const reader = new FileReader() // Letrehoz egy FileReader objektumot
-            reader.onload = () => {
-                const lines = reader.result.split('\n') // Beallitja a lines-t a reader.result-javal, ami egy tombot tartalmaz
-                const remove = lines.slice(1) // Beallitja a remove-t a lines elso elemevel
-                for(const line of remove){
-                    const trimmed = line.trim() // Beallitja a trimmed-t a line trimelt value-javal
-                    const fields = trimmed.split(';') // Beallitja a fields-t a trimmed split-javal
-                    const work = new Work(fields[0], fields[2], fields[1]) // Letrehoz egy uj Work objektumot a fields tombbol
-                    this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
-                }
-            }
-            reader.readAsText(file) // Beallitja a reader-t a file-javal
-        })
+        input.addEventListener('change', this.#import()) // Hozzaad egy eseményfigyelőt az input-hoz, ami akkor fut le, amikor a felhasználó rákattint
+        const button = this.createButton('Letöltés') // Letrehoz egy button elemet
+        this.div.appendChild(button) // Hozzaadja a button-t a div1-hez
+        button.addEventListener('click', this.#export()) // Hozzaad egy eseményfigyelőt a button-hoz, ami akkor fut le, amikor a felhasználó rákattint
+    }
 
-        const download = document.createElement('button') // Letrehoz egy button elemet
-        download.textContent = 'Letöltés' // Beallitja a button tartalmat
-        this.div.appendChild(download) // Hozzaadja a button-t a div-hez
-        download.addEventListener('click', () => {  // Hozzaad egy eseményfigyelőt a button-hoz, ami akkor fut le, amikor a felhasználó rákattint
+    /**
+     * 
+     * @returns {(e: Event) => void}
+     */
+    #export() { // Ez a fuggveny letrehoz egy uj exportot
+        return () => {  // Ez a fuggveny letrehoz egy uj exportot
             const link = document.createElement('a') // Letrehoz egy a elemet
             const content = this.manager.generateExportString() // Beallitja a content-t a manager generateExportString-javal
             const file = new Blob([content]) // Letrehoz egy file-t a content-bol
@@ -197,47 +256,76 @@ class UploadDownload extends Area {
             link.download = 'newdata.csv' // Beallitja a letoltes nevet
             link.click() // Meghivja a linket
             URL.revokeObjectURL(link.href) // Megszunteti a linket
-        })
+        }
+    }
+
+    /**
+     * 
+     * @returns {(e: Event) => void}
+     */
+    #import() { // Ez a fuggveny letrehoz egy uj importot
+        return (e) => { // Hozzaad egy eseményfigyelőt a button-hoz, ami akkor fut le, amikor a felhasználó rákattint
+            const file = e.target.files[0] // Beallitja a file-t az input file-javal
+            const reader = new FileReader() // Letrehoz egy FileReader objektumot
+            reader.onload = () => { // Beallitja a reader onload property-jat
+                const lines = reader.result.split('\n') // Beallitja a lines-t a reader.result-javal, ami egy tombot tartalmaz
+                const remove = lines.slice(1) // az első sort eltávolítja a lines tombbol
+                for(const line of remove){  // Vegigmegy a tombon
+                    const trimmed = line.trim() // Beallitja a trimmed-t a line trimelt value-javal
+                    const fields = trimmed.split(';') // Beallitja a fields-t a trimmed split-javal
+                    const work = new Work(fields[0], fields[1], fields[2]) // Letrehoz egy uj Work objektumot a fields tombbol
+                    this.manager.addWork(work) // Hozzaadja az objektumot a managerhez
+                }
+            }
+            reader.readAsText(file) // Beallitja a reader-t a file-javal
+        }
     }
 
 }
 
-class FormField {
+class FormField {   // Letrehoz egy FormField osztalyt, ami a form elemeket kezeli
     /**
      * @type {string} id
      */
-    #id
+    #id   // Ez a property az input elem id-jat tarolja
     /**
      * @type {HTMLInputElement} input
      */
-    #input
+    #input  // Ez a property az input elemet tarolja
     /**
      * @type {HTMLLabelElement} label
      */
-    #label
+    #label  // Ez a property a label elemet tarolja
     /**
      * @type {HTMLSpanElement} error
      */
-    #error
+    #error  // Ez a property az error elemet tarolja, ami a hiba uzenetet tartalmazza
 
     /**
-     * @returns {string}
+     * @returns {string} id
      */
-    get id() {
+    get id() {  // Ez a getter visszaadja a #id property-t
         return this.#id // Visszaadja az id-t
     }
 
     /**
-     * @returns {HTMLInputElement}
+     * @returns {string} value
      */
-    get value() {
+    get value() {   // Ez a getter visszaadja a #input property-t
         return this.#input.value // Visszaadja az input value-jat
     }
 
     /**
-     * @returns {HTMLInputElement}
+     * @param {string} value
      */
-    set error(value) {
+    set value(value) {  // Ez a setter beallitja a #input property-t
+        this.#input.value = value; // Beállítja az input mező értékét
+    }
+
+    /**
+     * @param {string} value
+     */
+    set error(value) {  // Ez a setter beallitja a #error property-t
         return this.#error.textContent = value // Visszaadja az error-t az input value-javal
     }
 
@@ -258,7 +346,7 @@ class FormField {
     }
 
     /**
-     * @returns {HTMLDivElement}
+     * @returns {HTMLDivElement} div1
      */
     getDiv(){
         const div1 = div('field') // Letrehoz egy field div-et

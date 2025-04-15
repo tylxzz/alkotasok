@@ -1,28 +1,174 @@
+/* Alapstílusok */
+body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Konténerek */
 .container, .containeroop {
-    background-color: green;
-    padding-bottom: 12px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(10px);
+    margin-bottom: 20px;
+    width: 90%;
+    max-width: 1200px;
+    animation: fadeIn 1s ease-in-out;
 }
 
+/* Táblázat */
 .table {
-    background-color: aqua;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-top: 20px;
 }
 
-.form {
-    margin-top: 12px;
-    background-color: pink;
-}
-
-table, tr, th, td {
-    border: 1px solid black;
+table {
+    width: 100%;
     border-collapse: collapse;
+    text-align: left;
 }
 
-.field{
-    margin-bottom: 12px;
-    background-color: antiquewhite;
+th, td {
+    padding: 12px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.error {
-    color: red;
+th {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
     font-weight: bold;
+    text-transform: uppercase;
+}
+
+td {
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+}
+
+/* Űrlap */
+.form {
+    margin-top: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.field {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 10px;
+    border-radius: 8px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #fff;
+}
+
+input, select, button {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+}
+
+input, select {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    transition: background 0.3s ease;
+}
+
+input:focus, select:focus {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Option elemek stílusa */
+select {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 10px;
+    border-radius: 5px;
+    font-size: 16px;
+    outline: none;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+select:focus {
+    background: rgba(255, 255, 255, 0.3);
+    color: #000;
+}
+
+option {
+    background: #1e3c72; /* Sötét háttér */
+    color: #fff; /* Fehér szöveg */
+    padding: 10px;
+}
+
+button {
+    background: #ff7f50;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+    background: #ff4500;
+    transform: scale(1.05);
+}
+
+button:active {
+    transform: scale(0.95);
+}
+
+/* Hibaüzenetek */
+.error {
+    color: #ff4d4d;
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+/* Animációk */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Reszponzív dizájn */
+@media (max-width: 768px) {
+    .container, .containeroop {
+        padding: 15px;
+    }
+
+    table, th, td {
+        font-size: 14px;
+    }
+
+    input, select, button {
+        font-size: 14px;
+    }
 }
