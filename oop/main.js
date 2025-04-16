@@ -17,4 +17,4 @@ const manager = new Manager() // Letrehoz egy manager objektumot
 const tableDiv = new Table('table', manager) // Letrehoz egy table div-et
 const formDiv = new Form('form', fConfig, manager) // Letrehoz egy form div-et
 const upload = new UploadDownload('upload', manager) // Letrehoz egy upload div-et
-const filterOOP = new Filter('filter', manager) // Letrehoz egy filter div-et
+const sortOOP = new Sort('sort', manager) // Letrehoz egy sort div-et

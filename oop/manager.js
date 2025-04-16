@@ -13,7 +13,7 @@ class Manager{  // Manager osztaly letrehozasa
      */
     #addWorkCallback    // Letrehoz egy ures tombot, ami a Work objektumokat tartalmazza
     /**
-     * @type {RenderTableCallback} renderTableCallback
+     * @type {WorkCallback} renderTableCallback
      */
     #renderTableCallback    // Letrehoz egy ures tombot, ami a Work objektumokat tartalmazza
 
@@ -46,16 +46,11 @@ class Manager{  // Manager osztaly letrehozasa
 
     /**
      * 
-     * @param {WorkCallback} callback 
+     * @param {(a: Work, b: Work) => number} callback 
      */
-    filter(callback){   // Szur egy tombot a callback alapjan
-        const result = [] // Letrehoz egy ures tombot
-        for(const work of this.#array){ // Vegigmegy a tomb elemein
-            if(callback(work)){ // Ha a callback true-t ad vissza, akkor
-                result.push(work) // Hozzaadja az elemet a tombhoz
-            }
-        }
-        this.#renderTableCallback(result) // Meghivja a renderTableCallback-et
+    sort(callback) { // Rendez egy tombot a callback alapjan
+        const sortedArray = [...this.#array].sort(callback) // Másolatot készít a tömbről, és rendezi
+        this.#renderTableCallback(sortedArray) // Meghívja a renderTableCallback-et a rendezett tömbbel
     }
 
     /**

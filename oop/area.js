@@ -214,7 +214,7 @@ class Form extends Area {   // Letrehoz egy Form osztalyt, ami az Area osztalybo
 
     /**
      * 
-     * @returns {work} object
+     * @returns {Work} object
      */
     #getObject(){   // Ez a fuggveny letrehoz egy uj objektumot
         const object = {} // Letrehoz egy ures objektumot

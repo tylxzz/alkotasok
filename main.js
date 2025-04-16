@@ -5,5 +5,5 @@ createTable(container, (tbody) => {  // Letrehozza a table-t a containerben
     createForm(tbody, container, array) // Letrehozza a formot a tablebody-val es a containerrel
     createFileUpload(tbody, container, array) // Letrehozza a file uploadot a tablebody-val es a containerrel
     createFileDownload(container, array) // Letrehozza a file letolto gombot a containerben
-    createFilterForm(container, tbody, array) // Letrehozza a filter formot a containerben
+    createSortForm(container, tbody, array) // Letrehozza a filter formot a containerben
 })

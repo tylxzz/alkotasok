@@ -22,7 +22,7 @@ const div = (className) => {    // Ez egy arrow function, ami egy div elemet hoz
  * @param {WorkCallback2} callback 
  * @returns {Work2[]} result
  */
-const filter = (workArray, callback) => {   // Ez egy arrow function, ami egy új tömböt hoz létre a megadott workArray-ból a callback függvény alapján
+const sort = (workArray, callback) => {   // Ez egy arrow function, ami egy új tömböt hoz létre a megadott workArray-ból a callback függvény alapján
     const result = [] // Letrehoz egy ures tombot
     for(const work of workArray) { // Vegigmegy a tombon
         if(callback(work)) { // Ha a callback true-t ad vissza, akkor
@@ -209,16 +209,16 @@ const createFileDownload = (container, workArray) => {  // Ez egy arrow function
 /**
  * @param {HTMLDivElement} container 
  * @param {HTMLTableSectionElement} tbody 
-* @param {Work2[]} workArray 
+ * @param {Work2[]} workArray 
  */
-const createFilterForm = (container, tbody, workArray) => { // Ez egy arrow function, ami egy filter formot hoz letre a megadott containerben
-    const filterForm = div('filter') // Letrehoz egy filter div-et
-    container.appendChild(filterForm) // Hozzaadja a filter div-et a container-hez
+const createSortForm = (container, tbody, workArray) => { // Ez egy arrow function, ami egy sort formot hoz letre a megadott containerben
+    const sortForm = div('sort') // Letrehoz egy sort div-et
+    container.appendChild(sortForm) // Hozzaadja a sort div-et a container-hez
 
-    const formForFilter = document.createElement('form') // Letrehoz egy form elemet
-    filterForm.appendChild(formForFilter) // Hozzaadja a form elemet a filter div-hez
+    const formForSort = document.createElement('form') // Letrehoz egy form elemet
+    sortForm.appendChild(formForSort) // Hozzaadja a form elemet a sort div-hez
     const select = document.createElement('select') // Letrehoz egy select elemet
-    formForFilter.appendChild(select) // Hozzaadja a select elemet a form-hoz
+    formForSort.appendChild(select) // Hozzaadja a select elemet a form-hoz
     const options = [{  // Letrehoz egy tombot az option elemekkel
         value: '',  // Az option value-ja
         innerText: '',  // Az option innerText property-je
@@ -242,40 +242,33 @@ const createFilterForm = (container, tbody, workArray) => { // Ez egy arrow func
         select.appendChild(element) // Hozzaadja az option elemet a select-hez
     }
 
-    const input = document.createElement('input') // Letrehoz egy input elemet
-    input.id = 'filterInput' // Beallitja az input id-jat
-    formForFilter.appendChild(input) // Hozzaadja az input elemet a form-hoz
-
-    const filterButton = document.createElement('button') // Letrehoz egy button elemet
-    filterButton.innerText = 'Szűrés' // Beallitja a button tartalmat
-    formForFilter.appendChild(filterButton) // Hozzaadja a button-t a form-hoz
-    formForFilter.addEventListener('submit', (e) => {   // Hozzaad egy eseményfigyelőt a formForFilter-hez, ami akkor fut le, amikor az űrlapot elküldik
+    const sortButton = document.createElement('button') // Letrehoz egy button elemet
+    sortButton.innerText = 'Rendezés' // Beallitja a button tartalmat
+    formForSort.appendChild(sortButton) // Hozzaadja a button-t a form-hoz
+    formForSort.addEventListener('submit', (e) => {   // Hozzaad egy eseményfigyelőt a formForsort-hez, ami akkor fut le, amikor az űrlapot elküldik
         e.preventDefault() // Megakadályozza az alapértelmezett űrlap elküldést
-        const filterInput = document.querySelector('#filterInput') // Letrehoz egy filterInput valtozot, ami a filter input elemet tartalmazza
-        const select = e.target.querySelector('select') // Letrehoz egy select valtozot, ami a select elemet tartalmazza
+        const selectValue = select.value // Letrehoz egy selectValue valtozot, ami a select value-jat tartalmazza
 
-        const filteredArray = filter(workArray, (element) => {  // Meghivja a filter fuggvenyt, ami szurja az elemeket
-            if(select.value === 'szerzo') { // Ha a select value-ja szerzo, akkor
-                if(filterInput.value === element.szerzo) { // Ha az element szerzo property-je megegyezik a filter input value-javal, akkor
-                    return true // Visszaadja a true-t
-                }
-            }else if(select.value === 'cim') { // Ha a select value-ja cim, akkor
-                if(filterInput.value === element.cim) { // Ha az element cim property-je megegyezik a filter input value-javal, akkor
-                    return true // Visszaadja a true-t
-                }
-            }else if(select.value === 'mufaj') { // Ha a select value-ja mufaj, akkor
-                if(filterInput.value === element.mufaj) { // Ha az element mufaj property-je megegyezik a filter input value-javal, akkor
-                    return true // Visszaadja a true-t
-                }
-            }else{  // Ha a select value-ja ures, akkor
-                return true // Visszaadja a true-t
+        if (selectValue === '') {   // Ha a select value-ja ures, akkor
+            tbody.innerHTML = '' // Kiüríti a táblázatot
+            for (const work of workArray) { // Vegigmegy a tombon
+                addRow(work, tbody) // Újra hozzáadja az eredeti elemeket
             }
+            return // Visszater
+        }
+
+        const sortedArray = [...workArray].sort((a, b) => { // Letrehoz egy sortedArray tombot, ami a workArray tombot tartalmazza
+            if (selectValue === 'mufaj') { // Ha a select value-ja mufaj, akkor
+                const aSecondWord = a.mufaj.split(' ')[1] || a.mufaj    // Beallitja a rendezest a mufaj property-re
+                const bSecondWord = b.mufaj.split(' ')[1] || b.mufaj    // Beallitja a rendezest a mufaj property-re
+                return aSecondWord.localeCompare(bSecondWord)   // Beallitja a rendezest a mufaj property-re
+            }
+            return a[selectValue].localeCompare(b[selectValue]) // Beallitja a rendezest a select value-jara
         })
 
         tbody.innerHTML = '' // Beallitja a tbody innerHTML property-jat uresre
-        for(const filteredElement of filteredArray){    // Vegigmegy a tombon
-            addRow(filteredElement, tbody) // Meghivja az addRow fuggvenyt a tablebody-val es az objektummal
+        for(const sortedElement of sortedArray){    // Vegigmegy a tombon
+            addRow(sortedElement, tbody) // Meghivja az addRow fuggvenyt a tablebody-val es az objektummal
         }
-        filterInput.value = '' // Beallitja a filter input value-jat uresre
     })
 }
