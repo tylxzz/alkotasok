@@ -148,7 +148,7 @@ class Form extends Area {   // Letrehoz egy Form osztalyt, ami az Area osztalybo
 
     /**
      * @param {cssClass} cssClass 
-     * @param {HTMLElement} elements
+     * @param {HTMLElement[]} elements
      * @param {Manager} manager
      */
     constructor(cssClass, elements, manager) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el es manager-el
@@ -160,7 +160,7 @@ class Form extends Area {   // Letrehoz egy Form osztalyt, ami az Area osztalybo
 
     /**
      * 
-     * @param {HTMLElement} fieldElements 
+     * @param {{ id: string, label: string }[]} fieldElements 
      * @returns {HTMLFormElement} form
      */
     #createForm(fieldElements) { // Ez a fuggveny letrehoz egy uj formot
@@ -214,7 +214,7 @@ class Form extends Area {   // Letrehoz egy Form osztalyt, ami az Area osztalybo
 
     /**
      * 
-     * @returns {Work} object
+     * @returns {{ [key: string]: string }} object
      */
     #getObject(){   // Ez a fuggveny letrehoz egy uj objektumot
         const object = {} // Letrehoz egy ures objektumot

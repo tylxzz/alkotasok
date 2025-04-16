@@ -1,6 +1,6 @@
 /** 
  * @callback WorkCallback
- * @param {Work[]} work
+ * @param {Work[]} works
  * @returns {void}
  */
 class Manager{  // Manager osztaly letrehozasa
@@ -49,7 +49,18 @@ class Manager{  // Manager osztaly letrehozasa
      * @param {(a: Work, b: Work) => number} callback 
      */
     sort(callback) { // Rendez egy tombot a callback alapjan
-        const sortedArray = [...this.#array].sort(callback) // Másolatot készít a tömbről, és rendezi
+        const sortedArray = this.#array.slice(); // Másolatot készít a tömbről a slice() metódussal
+    
+        for (let i = 0; i < sortedArray.length - 1; i++) {  // A rendezéshez szükséges külső ciklus
+            for (let j = 0; j < sortedArray.length - i - 1; j++) {  // A rendezéshez szükséges belső ciklus
+                if (callback(sortedArray[j], sortedArray[j + 1]) > 0) { // Ha a callback visszatérési értéke nagyobb, mint 0, akkor cserélünk
+                    const temp = sortedArray[j]    // Ideiglenes változó létrehozása
+                    sortedArray[j] = sortedArray[j + 1]    // Az aktuális elem értékének beállítása a következő elem értékére
+                    sortedArray[j + 1] = temp  // A következő elem értékének beállítása az aktuális elem értékére
+                }
+            }
+        }
+    
         this.#renderTableCallback(sortedArray) // Meghívja a renderTableCallback-et a rendezett tömbbel
     }
 

@@ -257,14 +257,26 @@ const createSortForm = (container, tbody, workArray) => { // Ez egy arrow functi
             return // Visszater
         }
 
-        const sortedArray = [...workArray].sort((a, b) => { // Letrehoz egy sortedArray tombot, ami a workArray tombot tartalmazza
-            if (selectValue === 'mufaj') { // Ha a select value-ja mufaj, akkor
-                const aSecondWord = a.mufaj.split(' ')[1] || a.mufaj    // Beallitja a rendezest a mufaj property-re
-                const bSecondWord = b.mufaj.split(' ')[1] || b.mufaj    // Beallitja a rendezest a mufaj property-re
-                return aSecondWord.localeCompare(bSecondWord)   // Beallitja a rendezest a mufaj property-re
+        const sortedArray = [...workArray]; // Másolatot készítünk a workArray-ról
+
+        for (let i = 0; i < sortedArray.length - 1; i++) {  // Külső ciklus a rendezéshez
+            for (let j = 0; j < sortedArray.length - i - 1; j++) {  // Buborék rendezés
+                let compareResult   // Hasonlítunk a kiválasztott mező szerint
+                if (selectValue === 'mufaj') { // Ha a select value-ja mufaj, akkor
+                    const aSecondWord = sortedArray[j].mufaj.split(' ')[1] || sortedArray[j].mufaj  // Műfaj második szava vagy az egész műfaj
+                    const bSecondWord = sortedArray[j + 1].mufaj.split(' ')[1] || sortedArray[j + 1].mufaj  // Műfaj második szava vagy az egész műfaj
+                    compareResult = aSecondWord.localeCompare(bSecondWord) // Műfaj második szava szerint hasonlítunk
+                } else {    // Ha nem mufaj, akkor a kiválasztott mező szerint hasonlítunk
+                    compareResult = sortedArray[j][selectValue].localeCompare(sortedArray[j + 1][selectValue]) // A kiválasztott mező szerint hasonlítunk
+                }
+            
+                if (compareResult > 0) { // Ha az aktuális elem nagyobb, mint a következő, akkor cserélünk
+                    const temp = sortedArray[j] // Letrehoz egy ideiglenes valtozot, ami az aktuális elemet tartalmazza
+                    sortedArray[j] = sortedArray[j + 1] // Beallitja az aktuális elemet a kovetkezo elemre
+                    sortedArray[j + 1] = temp  // Beallitja a kovetkezo elemet az ideiglenes valtozora
+                }
             }
-            return a[selectValue].localeCompare(b[selectValue]) // Beallitja a rendezest a select value-jara
-        })
+        }
 
         tbody.innerHTML = '' // Beallitja a tbody innerHTML property-jat uresre
         for(const sortedElement of sortedArray){    // Vegigmegy a tombon
