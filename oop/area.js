@@ -148,7 +148,7 @@ class Form extends Area {   // Letrehoz egy Form osztalyt, ami az Area osztalybo
 
     /**
      * @param {cssClass} cssClass 
-     * @param {HTMLElement[]} elements
+     * @param {{ id: string, label: string }[]} elements
      * @param {Manager} manager
      */
     constructor(cssClass, elements, manager) { // Ez a konstruktor létrehoz egy új Form objektumot a megadott cssClass-al es elements-el es manager-el
